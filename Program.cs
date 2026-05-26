@@ -8,6 +8,8 @@
 // == Step 2 - Fix It Three Ways ==
 // // Declare the variable as nullable with '?'
 // This tells the compiler: "I know this might be null. I accept responsibility."
+using System.Security.Principal;
+
 string? region = null;
 // Null-conditional operator '?.' — skip the call if null
 // If region is null, ToUpper() never executes. No crash.
@@ -83,3 +85,46 @@ Console.WriteLine(corrected);
 // Value equality - two records with the same data are equal
 var duplicate = new EnrollmentRecord("STU-001", "CS-401", enrollment.EnrolledAt);
 Console.WriteLine($"Same data? {enrollment == duplicate}"); // True
+
+
+// ==== Exercise 3 - Part 2: Course Capacity with the field Keyword ====
+
+// Legacy Pre-C# 14 Implementation (Verbose)
+// public class Course
+// {
+//     private int _capacity; // Manual backing field
+
+//     private int Capacity
+//     {
+//         get => _capacity;
+//         set
+//         {
+//             if (value <= 0)
+//                 throw new ArgumentOutOfRangeException("Capcity must be positive.");
+//             _capacity = value;
+//         }
+//     }
+// }
+
+var course = new Course {Code = "CS-401", Title = "Advanced C#", Capacity = 30};
+Console.WriteLine($"Course: {course.Title} (Capacity: {course.Capacity})");
+
+// Invalid capacity - should throw
+try
+{
+    course.Capacity = -5;
+}
+catch (ArgumentOutOfRangeException ex)
+{
+    Console.Write($"\nCaught: {ex.Message}");
+}
+
+// Invalid title - should throw
+try
+{
+    course.Title = "";
+}
+catch (ArgumentException ex)
+{
+    Console.WriteLine($"\nCaught: {ex.Message}");
+}
