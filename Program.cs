@@ -52,3 +52,34 @@ decimal totalAllocation = grantPerStudent * 100_000m;
 
 Console.WriteLine($"Total allocated (decimal): {totalAllocation}");
 Console.WriteLine($"Total allocated (formated): {totalAllocation:F2}");
+
+
+// ==== Exercise 3: Pipeline Data Corruption (lo 1.3 & 1.4: Encapsulation) ====
+
+// Legacy implementation - what the loggin service did to the data
+// public class Enrollment
+// {
+//     public string StudentId {get; set;} = string.Empty;
+//     public string CourseCode {get; set;} = string.Empty;
+//     public DateTime ProcessedAt {get; set;}
+// }
+
+// Somewhere in the logging pipline:
+// enrollment.CourseCode = null; // <- No compiler error. Data silently corrupted.
+
+// == Step 1 - Understand Why Records Exist ==
+// == Step 2 - Create the Domain Models File
+// Check Models.cs file for EnrollmentRecord
+var enrollment = new EnrollmentRecord("STU-001", "CS-401", DateTime.UtcNow);
+Console.WriteLine(enrollment);
+
+// Try to mutate it - uncomment this line and see the compiler error:
+// enrollment.CourseCode = "HACKED"; // ERROR: init-only property
+
+// Non-destructive copy - create a NEW record with one field changed
+var corrected = enrollment with {CourseCode = "CS-402"};
+Console.WriteLine(corrected);
+
+// Value equality - two records with the same data are equal
+var duplicate = new EnrollmentRecord("STU-001", "CS-401", enrollment.EnrolledAt);
+Console.WriteLine($"Same data? {enrollment == duplicate}"); // True
