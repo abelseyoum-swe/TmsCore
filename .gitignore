@@ -1,0 +1,43 @@
+# Ignore Visual Studio temporary files, build outputs, and user-specific files
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio workspace
+.vs/
+.vscode/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+/bin/
+/obj/
+
+# NuGet
+packages/
+*.nupkg
+project.lock.json
+project.assets.json
+
+# Rider
+.idea/
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Logs
+*.log
+
+# Ignore publish and deployment files
+*.Publish.xml
+*.publishsettings
+
+# Misc
+*.db
+*.pdb
