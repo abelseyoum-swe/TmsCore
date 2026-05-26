@@ -8,7 +8,6 @@
 // == Step 2 - Fix It Three Ways ==
 // // Declare the variable as nullable with '?'
 // This tells the compiler: "I know this might be null. I accept responsibility."
-using System.Security.Principal;
 
 string? region = null;
 // Null-conditional operator '?.' — skip the call if null
@@ -140,3 +139,30 @@ Console.WriteLine($"Student: {s.Name}, GPA: {s.GPA}");
 // new Student {Id = "S3", Name = "Test", Age = 12, GPA = 3.0m};
 
 // new Student {Id = "S4", Name = "Test", Age = 20, GPA = 5.0m};
+
+
+// ==== Exercise 3B: Interface Contract Wiring (LO 1.4: OOP Contracts) ====
+
+// == Step 1 - Define the Contract ==
+// Check Models.cs for IGradable inderface
+
+// == Step 2 - Implement It on Two Assessment Types ==
+// Check Models.cs for Quiz and LabAssignment classes
+
+// == Step 3 - Write the Polymorphic Report ==
+void PrintGradeReport(IEnumerable<IGradable> assessments)
+{
+    Console.WriteLine("--- Grade Report ---");
+    foreach (var item in assessments)
+    {
+        Console.WriteLine($"{item.Title}: {item.CalculateGrade():F2}%");
+    }
+}
+
+// Test it - one array holds two completely different types
+IGradable[] cohortAssessments = [
+    new Quiz {Title = "C# Basics", CorrectAnswers = 18, TotalQuestions = 20},
+    new LabAssignment {Title = "Registration API", FunctionalityScore = 90m, CodeQualityScore = 85m}
+];
+
+PrintGradeReport(cohortAssessments);
