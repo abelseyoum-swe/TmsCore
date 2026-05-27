@@ -52,12 +52,12 @@ decimal grantPerStudent = 1999.99m;
 decimal totalAllocation = grantPerStudent * 100_000m;
 
 Console.WriteLine($"Total allocated (decimal): {totalAllocation}");
-Console.WriteLine($"Total allocated (formated): {totalAllocation:F2}");
+Console.WriteLine($"Total allocated (formatted): {totalAllocation:F2}");
 
 
 // ==== Exercise 3: Pipeline Data Corruption (lo 1.3 & 1.4: Encapsulation) ====
 
-// Legacy implementation - what the loggin service did to the data
+// Legacy implementation - what the logging service did to the data
 // public class Enrollment
 // {
 //     public string StudentId {get; set;} = string.Empty;
@@ -65,7 +65,7 @@ Console.WriteLine($"Total allocated (formated): {totalAllocation:F2}");
 //     public DateTime ProcessedAt {get; set;}
 // }
 
-// Somewhere in the logging pipline:
+// Somewhere in the logging pipeline:
 // enrollment.CourseCode = null; // <- No compiler error. Data silently corrupted.
 
 // == Step 1 - Understand Why Records Exist ==
@@ -99,7 +99,7 @@ Console.WriteLine($"Same data? {enrollment == duplicate}"); // True
 //         set
 //         {
 //             if (value <= 0)
-//                 throw new ArgumentOutOfRangeException("Capcity must be positive.");
+//                 throw new ArgumentOutOfRangeException("Capacity must be positive.");
 //             _capacity = value;
 //         }
 //     }
@@ -144,7 +144,7 @@ Console.WriteLine($"Student: {s.Name}, GPA: {s.GPA}");
 // ==== Exercise 3B: Interface Contract Wiring (LO 1.4: OOP Contracts) ====
 
 // == Step 1 - Define the Contract ==
-// Check Models.cs for IGradable inderface
+// Check Models.cs for IGradable interface
 
 // == Step 2 - Implement It on Two Assessment Types ==
 // Check Models.cs for Quiz and LabAssignment classes
@@ -166,3 +166,50 @@ IGradable[] cohortAssessments = [
 ];
 
 PrintGradeReport(cohortAssessments);
+
+// ==== Exercise 4: Defining the "Pyramid of Dom" (LO 1.6: Pattern Matching & Guards) ====
+
+// if (student != null)
+// {
+//     if (course != null)
+//     {
+//         if (course.Capacity > 0)
+//         {
+//             // Success buried three levels deep
+//         }
+//     }
+// }
+
+// == Step 1 - Build the Enrollment Service ==
+// Check EnrollmentService.cs
+
+// == Step 2 - Test It ==
+var service = new EnrollmentService();
+
+// Test 1: Valid registration
+var validStudent = new Student {Id = "S1", Name="Abeba", Age = 20, GPA = 3.8m};
+var validCourse = new Course {Code = "CS-401", Title = "Advanced C#", Capacity = 30};
+var result = service.ProcessRegistration(validStudent, validCourse);
+Console.WriteLine($"Enrolled: {result.StudentId} in {result.CourseCode}");
+
+// Test 2: Null Student should throw
+try
+{
+    service.ProcessRegistration(null, validCourse);
+}
+catch (ArgumentNullException ex)
+{
+    Console.WriteLine($"Guard caught: {ex.ParamName}");
+}
+
+// Test 3: Full Course should throw
+var fullCourse = new Course {Code = "CS-402", Title = "Full Course", Capacity = 1};
+fullCourse.EnrolledCount = 1;
+try
+{
+    service.ProcessRegistration(validStudent, fullCourse);
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine($"Business rule: {ex.Message}");
+}
