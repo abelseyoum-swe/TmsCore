@@ -376,3 +376,29 @@ foreach (var student in students)
 {
     Console.WriteLine($"{student.Name} GPA: {student.GPA}");
 }
+
+// ==== Exercise 6 Part B: The TMS Enrollment Engine ====
+
+var enrollCourse = new Course { Code = "CRS-101", Title = "C# Mastery", Capacity = 2};
+var enrollService = new EnrollmentService();
+
+var enrollments = new List<EnrollmentRecord>();
+var failures = new List<string>();
+
+sw.Restart();
+
+foreach (var student in students)
+{
+    try
+    {
+        var record = enrollService.ProcessRegistration(student, enrollCourse);
+        enrollCourse.EnrolledCount++;
+        enrollments.Add(record);
+        Console.WriteLine($"Enrolled: {student.Name}");
+    }
+    catch (InvalidOperationException ex)
+    {
+        failures.Add($"{student.Name}: {ex.Message}");
+        Console.WriteLine($"Rejected: {student.Name} {ex.Message}");
+    }
+}
