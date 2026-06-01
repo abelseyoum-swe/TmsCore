@@ -402,3 +402,21 @@ foreach (var student in students)
         Console.WriteLine($"Rejected: {student.Name} {ex.Message}");
     }
 }
+
+
+// ==== Exercise 6B: Safe Fire-and-Forget (Optional Not Assessed) ====
+
+async Task SendConfirmationAsync(Student student)
+{
+    try
+    {
+        await Task.Delay(100); // Simulate sending email
+        Console.WriteLine($"Email sent to {student.Name}");
+    }
+    catch (Exception ex)
+    {
+        // Log the failure do NOT re-throw.
+        // This is intentional fire-and-forget.
+        Console.WriteLine($"Email failed for {student.Name}: {ex.Message}");
+    }
+}
