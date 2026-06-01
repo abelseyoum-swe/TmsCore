@@ -420,3 +420,28 @@ async Task SendConfirmationAsync(Student student)
         Console.WriteLine($"Email failed for {student.Name}: {ex.Message}");
     }
 }
+
+
+// ==== Exercise 7: The Unhelpful Crash (LO 1.8: Exceptions & Custom Faults) ====
+
+// == Step 1 - Create Two Custom Exceptions ==
+// Check Exceptions.cs for "class TmsDatabaseException : Exception"
+
+// == Step 2 - Use Them in the Enrollment Pipeline ==
+// Check EnrollmentService.cs for "class EnrollmentService"
+
+// == Step 3 - Catch Domain Exceptions ==
+try
+{
+    var overflowCourse = new Course { Code = "CRS-999", Title = "Overflow Test", Capacity = 1, EnrolledCount = 1 };
+    enrollService.ProcessRegistration(
+        new Student { Id = "S99", Name = "Test", Age = 20, GPA = 3.0m },
+        overflowCourse
+    );
+}
+catch (CapacityReachedException ex)
+{
+    Console.WriteLine($"\nDomain exception caught:");
+    Console.WriteLine($" Course: {ex.CourseCode}");
+    Console.WriteLine($" Message: {ex.Message}");
+}

@@ -12,8 +12,8 @@ public class EnrollmentService
         if (course is null)
             throw new ArgumentNullException(nameof(course));
 
-        if (course.Capacity <= 0)
-            throw new InvalidOperationException("Course is full.");
+        if (course.EnrolledCount >= course.Capacity)
+            throw new CapacityReachedException(course.Code);
 
         // TODO 2: Use a switch expression on student.GPA to classify academic standing:
         //      >= 3.5 → "Honors"
